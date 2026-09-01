@@ -1,0 +1,636 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MPI - Pencarian Data (Searching)</title>
+    
+    <!-- Google Fonts: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- FontAwesome 6 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Tailwind CSS (CDN) -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Tailwind Config for Custom Colors/Fonts -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            50: '#eef2ff',
+                            100: '#e0e7ff',
+                            500: '#6366f1',
+                            600: '#4f46e5',
+                            700: '#4338ca',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- Custom CSS -->
+    <style>
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f5f9; 
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1; 
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8; 
+        }
+        
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .hide-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+
+        /* Smooth Transitions */
+        .tab-content {
+            transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
+        }
+        .tab-hidden {
+            opacity: 0;
+            transform: translateY(10px);
+            pointer-events: none;
+            position: absolute;
+            visibility: hidden;
+        }
+        .tab-active {
+            opacity: 1;
+            transform: translateY(0);
+            position: relative;
+            visibility: visible;
+        }
+
+        /* 3D Flip Card CSS */
+        .flashcard {
+            perspective: 1000px;
+            height: 250px;
+        }
+        .flashcard-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            text-align: center;
+            transition: transform 0.6s;
+            transform-style: preserve-3d;
+            cursor: pointer;
+        }
+        .flashcard.flipped .flashcard-inner {
+            transform: rotateY(180deg);
+        }
+        .flashcard-front, .flashcard-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            -webkit-backface-visibility: hidden;
+            backface-visibility: hidden;
+            border-radius: 1rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 1.5rem;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+        }
+        .flashcard-front {
+            background-color: white;
+            color: #1e293b;
+            border: 2px solid #e2e8f0;
+        }
+        .flashcard-back {
+            background-color: #4f46e5;
+            color: white;
+            transform: rotateY(180deg);
+        }
+
+        /* Print Styles */
+        @media print {
+            .no-print { display: none !important; }
+            body { background: white; overflow: visible; height: auto; }
+            .main-content { overflow: visible; height: auto; }
+            .tab-content { opacity: 1; transform: none; position: relative; visibility: visible; display: block; margin-bottom: 2rem;}
+            .tab-hidden { display: none; }
+            .flashcard { page-break-inside: avoid; }
+        }
+    </style>
+</head>
+<body class="bg-slate-50 h-screen flex flex-col font-sans overflow-hidden text-slate-800">
+
+    <!-- Header Area -->
+    <header class="bg-white shadow-sm z-20 shrink-0">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex flex-wrap items-center justify-between gap-4">
+            
+            <div class="flex items-center gap-3">
+                <div class="bg-brand-100 text-brand-700 p-2 rounded-lg">
+                    <i class="fa-solid fa-laptop-code text-xl"></i>
+                </div>
+                <div>
+                    <div class="flex items-center gap-2 mb-1">
+                        <span class="text-xs font-bold px-2 py-1 bg-slate-100 text-slate-600 rounded-md">INFORMATIKA VIII</span>
+                        <span class="text-xs font-bold px-2 py-1 bg-emerald-100 text-emerald-700 rounded-md">Bab 1 Sub A</span>
+                    </div>
+                    <h1 class="text-lg md:text-xl font-bold leading-tight">Pencarian Data (Searching)</h1>
+                </div>
+            </div>
+
+            <div class="flex items-center gap-2 md:gap-4 no-print">
+                <div class="bg-slate-100 text-slate-500 px-3 py-1.5 rounded-full text-sm font-medium" id="module-indicator">
+                    Modul 1 / 7
+                </div>
+                <button onclick="window.print()" class="p-2 text-slate-500 hover:bg-slate-100 hover:text-slate-800 rounded-lg transition-colors tooltip-btn" title="Cetak Modul">
+                    <i class="fa-solid fa-print"></i>
+                </button>
+                <button onclick="toggleFullscreen()" class="p-2 text-slate-500 hover:bg-slate-100 hover:text-slate-800 rounded-lg transition-colors tooltip-btn" title="Layar Penuh">
+                    <i class="fa-solid fa-expand" id="fullscreen-icon"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Navigation Chip Bar -->
+        <div class="border-t border-slate-100 no-print">
+            <nav id="chip-container" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex overflow-x-auto hide-scrollbar py-3 gap-2 scroll-smooth">
+                <!-- Chips generated via JS -->
+            </nav>
+        </div>
+    </header>
+
+    <!-- Main Content Area -->
+    <main class="flex-1 overflow-y-auto main-content relative scroll-smooth" id="main-scroll-area">
+        <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8 pb-24">
+            
+            <!-- TAB 1: Konsep Dasar -->
+            <div id="tab-1" class="tab-content tab-active">
+                <div class="bg-gradient-to-r from-brand-600 to-indigo-800 rounded-2xl p-8 md:p-12 text-white shadow-lg mb-8 relative overflow-hidden">
+                    <div class="relative z-10">
+                        <h2 class="text-3xl md:text-4xl font-bold mb-4">Mengenal Konsep Pencarian</h2>
+                        <p class="text-brand-100 text-lg md:text-xl max-w-2xl leading-relaxed">
+                            Pencarian (Searching) adalah proses menemukan suatu nilai, data, atau informasi tertentu di dalam sekumpulan data yang ada. Dalam dunia komputasi, pencarian data yang efisien sangat penting agar informasi dapat ditemukan dengan cepat dan akurat.
+                        </p>
+                    </div>
+                    <i class="fa-solid fa-magnifying-glass-chart absolute right-[-5%] bottom-[-10%] text-9xl text-white opacity-10"></i>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                    <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-100">
+                        <div class="w-12 h-12 bg-blue-100 text-blue-600 rounded-lg flex items-center justify-center text-xl mb-4">
+                            <i class="fa-solid fa-database"></i>
+                        </div>
+                        <h3 class="font-bold text-lg mb-2">Himpunan Data</h3>
+                        <p class="text-slate-600 text-sm">Pencarian selalu dilakukan pada sekumpulan data, bisa berupa daftar nama, angka, atau kumpulan file.</p>
+                    </div>
+                    <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-100">
+                        <div class="w-12 h-12 bg-emerald-100 text-emerald-600 rounded-lg flex items-center justify-center text-xl mb-4">
+                            <i class="fa-solid fa-check-circle"></i>
+                        </div>
+                        <h3 class="font-bold text-lg mb-2">Status: Found</h3>
+                        <p class="text-slate-600 text-sm">Status ini menandakan bahwa data atau informasi yang dicari berhasil ditemukan di dalam himpunan data.</p>
+                    </div>
+                    <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-100">
+                        <div class="w-12 h-12 bg-rose-100 text-rose-600 rounded-lg flex items-center justify-center text-xl mb-4">
+                            <i class="fa-solid fa-circle-xmark"></i>
+                        </div>
+                        <h3 class="font-bold text-lg mb-2">Status: Not Found</h3>
+                        <p class="text-slate-600 text-sm">Status ini terjadi ketika sistem telah selesai mencari seluruh himpunan data, namun data tidak ada.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB 2: Sub-Topik 1 -->
+            <div id="tab-2" class="tab-content tab-hidden">
+                <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+                    <div class="border-b border-slate-100 bg-slate-50 px-6 py-4 flex items-center gap-3">
+                        <i class="fa-solid fa-map-location-dot text-brand-600 text-xl"></i>
+                        <h2 class="text-xl font-bold">1. Lingkungan Pencarian Data</h2>
+                    </div>
+                    <div class="p-6 md:p-8">
+                        <h3 class="text-lg font-bold mb-3 text-slate-800">Ringkasan Materi</h3>
+                        <p class="text-slate-600 leading-relaxed mb-6">
+                            Pencarian adalah aktivitas keseharian yang sering kita lakukan, baik di dunia nyata maupun di dunia digital. Komputer dapat melakukan pencarian jauh lebih cepat daripada manusia karena menggunakan algoritma tertentu. Keberhasilan suatu pencarian bergantung pada metode yang digunakan dan bagaimana data tersebut disusun sejak awal.
+                        </p>
+                        
+                        <div class="bg-amber-50 border border-amber-200 rounded-xl p-5 relative overflow-hidden">
+                            <div class="absolute top-0 left-0 w-1 h-full bg-amber-500"></div>
+                            <h4 class="font-bold text-amber-800 flex items-center gap-2 mb-2">
+                                <i class="fa-regular fa-lightbulb"></i> Contoh Kasus Realistis
+                            </h4>
+                            <p class="text-amber-900 text-sm md:text-base leading-relaxed">
+                                Skenario: Anda sedang mencari buku novel Harry Potter di perpustakaan sekolah. Jika buku-buku diletakkan sembarangan, Anda akan kesulitan. Namun, jika buku diletakkan rapi berdasarkan abjad atau genre, Anda dapat menemukannya dengan sangat cepat. Mesin pencari seperti Google menggunakan indeks (daftar rapi) miliaran halaman web agar bisa menampilkan hasil dalam hitungan detik.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB 3: Sub-Topik 2 -->
+            <div id="tab-3" class="tab-content tab-hidden">
+                <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+                    <div class="border-b border-slate-100 bg-slate-50 px-6 py-4 flex items-center gap-3">
+                        <i class="fa-solid fa-arrow-down-1-9 text-brand-600 text-xl"></i>
+                        <h2 class="text-xl font-bold">2. Pencarian Linier (Linear Search)</h2>
+                    </div>
+                    <div class="p-6 md:p-8">
+                        <h3 class="text-lg font-bold mb-3 text-slate-800">Ringkasan Materi</h3>
+                        <p class="text-slate-600 leading-relaxed mb-6">
+                            Pencarian Linier (Linear Search) adalah algoritma pencarian yang paling sederhana. Metode ini bekerja dengan cara memeriksa setiap elemen dalam sekumpulan data satu per satu, berurutan dari elemen pertama hingga elemen terakhir, sampai data yang dicari ditemukan atau seluruh data sudah diperiksa. Algoritma ini cocok untuk data yang tidak terurut, namun kurang efisien untuk jumlah data yang sangat banyak.
+                        </p>
+                        
+                        <div class="bg-sky-50 border border-sky-200 rounded-xl p-5 relative overflow-hidden">
+                            <div class="absolute top-0 left-0 w-1 h-full bg-sky-500"></div>
+                            <h4 class="font-bold text-sky-800 flex items-center gap-2 mb-2">
+                                <i class="fa-solid fa-user-group"></i> Contoh Kasus Realistis
+                            </h4>
+                            <p class="text-sky-900 text-sm md:text-base leading-relaxed">
+                                Skenario: Guru meminta Anda mencari nama "Budi" di lembar absensi pendaftaran eskul yang daftarnya belum diurutkan abjad. Anda harus membaca daftar nama dari baris paling atas, satu per satu ke bawah, sampai menemukan nama "Budi". Jika nama Budi ada di urutan terakhir, Anda harus membaca seluruh daftar. Ini adalah contoh penerapan Linear Search.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB 4: Sub-Topik 3 -->
+            <div id="tab-4" class="tab-content tab-hidden">
+                <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+                    <div class="border-b border-slate-100 bg-slate-50 px-6 py-4 flex items-center gap-3">
+                        <i class="fa-solid fa-arrows-split-up-and-left text-brand-600 text-xl"></i>
+                        <h2 class="text-xl font-bold">3. Pencarian Bagi Dua (Binary Search)</h2>
+                    </div>
+                    <div class="p-6 md:p-8">
+                        <h3 class="text-lg font-bold mb-3 text-slate-800">Ringkasan Materi</h3>
+                        <p class="text-slate-600 leading-relaxed mb-6">
+                            Pencarian Bagi Dua (Binary Search) adalah algoritma pencarian yang jauh lebih cepat dan efisien. Namun, syarat mutlak algoritma ini adalah <strong>data harus sudah terurut</strong>. Cara kerjanya adalah dengan membagi dua himpunan data, mengecek nilai tengah, dan membuang separuh bagian data yang tidak mungkin berisi nilai yang dicari. Proses ini diulang terus hingga data ditemukan.
+                        </p>
+                        
+                        <div class="bg-emerald-50 border border-emerald-200 rounded-xl p-5 relative overflow-hidden">
+                            <div class="absolute top-0 left-0 w-1 h-full bg-emerald-500"></div>
+                            <h4 class="font-bold text-emerald-800 flex items-center gap-2 mb-2">
+                                <i class="fa-solid fa-book"></i> Contoh Kasus Realistis
+                            </h4>
+                            <p class="text-emerald-900 text-sm md:text-base leading-relaxed">
+                                Skenario: Anda mencari arti kata "Komputer" di Kamus Bahasa Indonesia yang tebal (Kamus sudah terurut abjad). Anda tidak membacanya dari halaman pertama (A). Anda langsung membuka kamus di tengah-tengah. Jika huruf di tengah adalah 'M', Anda tahu 'K' ada di separuh awal kamus, maka bagian belakang kamus diabaikan. Anda lalu membagi dua lagi separuh awal tadi, begitu seterusnya sampai menemukan kata "Komputer".
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB 5: Flashcard -->
+            <div id="tab-5" class="tab-content tab-hidden">
+                <div class="text-center mb-8">
+                    <h2 class="text-2xl font-bold mb-2">Kartu Pintar Interaktif</h2>
+                    <p class="text-slate-500">Klik atau sentuh kartu untuk melihat jawaban di baliknya.</p>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <!-- Card 1 -->
+                    <div class="flashcard" onclick="this.classList.toggle('flipped')">
+                        <div class="flashcard-inner">
+                            <div class="flashcard-front">
+                                <i class="fa-solid fa-circle-question text-3xl text-brand-500 mb-4"></i>
+                                <p class="font-semibold text-lg">Apa istilah bahasa inggris dari pencarian data dalam komputasi?</p>
+                                <span class="text-xs text-slate-400 absolute bottom-4">Klik untuk membalik</span>
+                            </div>
+                            <div class="flashcard-back">
+                                <i class="fa-solid fa-lightbulb text-3xl text-yellow-300 mb-4"></i>
+                                <p class="font-bold text-xl">Searching</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Card 2 -->
+                    <div class="flashcard" onclick="this.classList.toggle('flipped')">
+                        <div class="flashcard-inner">
+                            <div class="flashcard-front">
+                                <i class="fa-solid fa-circle-question text-3xl text-brand-500 mb-4"></i>
+                                <p class="font-semibold text-lg">Metode pencarian yang mengecek data satu per satu dari awal disebut?</p>
+                                <span class="text-xs text-slate-400 absolute bottom-4">Klik untuk membalik</span>
+                            </div>
+                            <div class="flashcard-back">
+                                <i class="fa-solid fa-lightbulb text-3xl text-yellow-300 mb-4"></i>
+                                <p class="font-bold text-xl">Linear Search<br><span class="text-sm font-normal">(Pencarian Linier)</span></p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Card 3 -->
+                    <div class="flashcard" onclick="this.classList.toggle('flipped')">
+                        <div class="flashcard-inner">
+                            <div class="flashcard-front">
+                                <i class="fa-solid fa-circle-question text-3xl text-brand-500 mb-4"></i>
+                                <p class="font-semibold text-lg">Syarat mutlak agar algoritma Binary Search dapat digunakan adalah data harus?</p>
+                                <span class="text-xs text-slate-400 absolute bottom-4">Klik untuk membalik</span>
+                            </div>
+                            <div class="flashcard-back">
+                                <i class="fa-solid fa-lightbulb text-3xl text-yellow-300 mb-4"></i>
+                                <p class="font-bold text-xl">Sudah Terurut<br><span class="text-sm font-normal">(Sorted)</span></p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Card 4 -->
+                    <div class="flashcard" onclick="this.classList.toggle('flipped')">
+                        <div class="flashcard-inner">
+                            <div class="flashcard-front">
+                                <i class="fa-solid fa-circle-question text-3xl text-brand-500 mb-4"></i>
+                                <p class="font-semibold text-lg">Metode apa yang paling cocok mencari nama di tumpukan kertas yang berantakan?</p>
+                                <span class="text-xs text-slate-400 absolute bottom-4">Klik untuk membalik</span>
+                            </div>
+                            <div class="flashcard-back">
+                                <i class="fa-solid fa-lightbulb text-3xl text-yellow-300 mb-4"></i>
+                                <p class="font-bold text-xl">Linear Search</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Card 5 -->
+                    <div class="flashcard" onclick="this.classList.toggle('flipped')">
+                        <div class="flashcard-inner">
+                            <div class="flashcard-front">
+                                <i class="fa-solid fa-circle-question text-3xl text-brand-500 mb-4"></i>
+                                <p class="font-semibold text-lg">Status apa yang diberikan jika data yang dicari tidak ada dalam kumpulan data?</p>
+                                <span class="text-xs text-slate-400 absolute bottom-4">Klik untuk membalik</span>
+                            </div>
+                            <div class="flashcard-back">
+                                <i class="fa-solid fa-lightbulb text-3xl text-yellow-300 mb-4"></i>
+                                <p class="font-bold text-xl">Not Found<br><span class="text-sm font-normal">(Tidak Ditemukan)</span></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB 6: Asesmen -->
+            <div id="tab-6" class="tab-content tab-hidden">
+                <div class="bg-white rounded-2xl shadow-md border border-slate-200 overflow-hidden">
+                    <div class="bg-brand-600 px-6 py-5 text-white flex justify-between items-center">
+                        <div>
+                            <h2 class="text-xl font-bold flex items-center gap-2"><i class="fa-solid fa-clipboard-check"></i> Asesmen Mandiri</h2>
+                            <p class="text-brand-100 text-sm mt-1">Jawablah pertanyaan di bawah ini dengan singkat dan tepat.</p>
+                        </div>
+                        <div id="score-display" class="hidden bg-white text-brand-700 px-4 py-2 rounded-lg font-bold text-xl shadow-inner">
+                            0 / 100
+                        </div>
+                    </div>
+                    
+                    <div class="p-6 md:p-8">
+                        <form id="assessment-form" onsubmit="event.preventDefault(); checkAnswers();">
+                            <div class="space-y-6" id="questions-container">
+                                <!-- Questions will be generated by JS -->
+                            </div>
+
+                            <div class="mt-10 flex gap-4 pt-6 border-t border-slate-100">
+                                <button type="submit" class="flex-1 bg-brand-600 hover:bg-brand-700 text-white font-bold py-3 px-6 rounded-xl transition-colors flex justify-center items-center gap-2">
+                                    <i class="fa-solid fa-check"></i> Cek Jawaban
+                                </button>
+                                <button type="button" onclick="resetAssessment()" class="bg-slate-100 hover:bg-slate-200 text-slate-600 font-bold py-3 px-6 rounded-xl transition-colors">
+                                    <i class="fa-solid fa-rotate-right"></i> Reset
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB 7: Kesimpulan -->
+            <div id="tab-7" class="tab-content tab-hidden">
+                <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden p-6 md:p-10 text-center">
+                    <div class="w-20 h-20 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center text-4xl mx-auto mb-6">
+                        <i class="fa-solid fa-flag-checkered"></i>
+                    </div>
+                    <h2 class="text-2xl md:text-3xl font-bold text-slate-800 mb-4">Kesimpulan & Refleksi</h2>
+                    <p class="text-slate-600 max-w-2xl mx-auto leading-relaxed mb-8">
+                        Pencarian data (Searching) adalah fondasi penting dalam informatika. Anda telah mempelajari konsep dasar pencarian, serta dua algoritma utamanya: <strong>Linear Search</strong> yang sederhana untuk data acak, dan <strong>Binary Search</strong> yang sangat cepat namun membutuhkan data yang terurut. 
+                    </p>
+                    <div class="inline-block bg-slate-50 border border-slate-200 rounded-xl p-6 text-left">
+                        <h3 class="font-bold text-slate-700 mb-2">Cek Kemampuan Diri:</h3>
+                        <ul class="space-y-2 text-slate-600 text-sm">
+                            <li><i class="fa-solid fa-check text-emerald-500 mr-2"></i> Saya mengerti apa itu proses Searching.</li>
+                            <li><i class="fa-solid fa-check text-emerald-500 mr-2"></i> Saya bisa menjelaskan cara kerja Linear Search.</li>
+                            <li><i class="fa-solid fa-check text-emerald-500 mr-2"></i> Saya bisa menjelaskan cara kerja Binary Search.</li>
+                            <li><i class="fa-solid fa-check text-emerald-500 mr-2"></i> Saya tahu syarat utama penggunaan Binary Search.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- JavaScript Logic -->
+    <script>
+        // Data Tabs
+        const tabs = [
+            { id: 1, title: 'Konsep Dasar', icon: 'fa-cubes' },
+            { id: 2, title: 'Lingkungan', icon: 'fa-map-location-dot' },
+            { id: 3, title: 'Linear Search', icon: 'fa-arrow-down-1-9' },
+            { id: 4, title: 'Binary Search', icon: 'fa-arrows-split-up-and-left' },
+            { id: 5, title: 'Flashcards', icon: 'fa-clone' },
+            { id: 6, title: 'Asesmen', icon: 'fa-clipboard-check' },
+            { id: 7, title: 'Kesimpulan', icon: 'fa-flag-checkered' }
+        ];
+
+        let currentTabId = 1;
+
+        // Data Asesmen
+        const questions = [
+            { id: 'q1', text: 'Proses menemukan nilai atau data tertentu di dalam sekumpulan data disebut...', answers: ['pencarian', 'searching'] },
+            { id: 'q2', text: 'Mencari data dengan menelusuri elemen satu per satu dari awal hingga akhir disebut pencarian...', answers: ['linier', 'linear', 'berurutan'] },
+            { id: 'q3', text: 'Metode pencarian yang membagi dua area pencarian secara terus-menerus disebut pencarian...', answers: ['biner', 'binary', 'bagi dua'] },
+            { id: 'q4', text: 'Syarat mutlak kumpulan data agar bisa dicari menggunakan Binary Search adalah data harus...', answers: ['terurut', 'diurutkan', 'urut'] },
+            { id: 'q5', text: 'Status yang menyatakan bahwa data yang dicari berhasil ditemukan adalah...', answers: ['found', 'ditemukan'] },
+            { id: 'q6', text: 'Status yang menyatakan bahwa data yang dicari tidak ada dalam himpunan data adalah...', answers: ['not found', 'tidak ditemukan'] },
+            { id: 'q7', text: 'Mencari arti kata dalam kamus cetak biasanya merepresentasikan algoritma pencarian...', answers: ['biner', 'binary'] },
+            { id: 'q8', text: 'Jika menelusuri absensi acak dari atas ke bawah, kita menggunakan algoritma pencarian...', answers: ['linier', 'linear'] },
+            { id: 'q9', text: 'Pencarian linier kurang efisien jika digunakan untuk mencari pada jumlah data yang sangat...', answers: ['banyak', 'besar'] },
+            { id: 'q10', text: 'Di mesin pencari, kata atau kalimat yang kita ketikkan untuk mencari informasi disebut kata...', answers: ['kunci', 'keyword'] }
+        ];
+
+        // Initialize UI
+        document.addEventListener('DOMContentLoaded', () => {
+            renderChips();
+            renderAssessment();
+            switchTab(1); // Default tab
+        });
+
+        // Render Navigation Chips
+        function renderChips() {
+            const container = document.getElementById('chip-container');
+            container.innerHTML = tabs.map(tab => `
+                <button 
+                    id="chip-${tab.id}"
+                    onclick="switchTab(${tab.id})"
+                    class="chip-btn whitespace-nowrap flex items-center gap-2 px-5 py-2.5 rounded-full border border-slate-200 bg-white text-slate-600 font-medium text-sm hover:bg-slate-50 transition-all"
+                >
+                    <i class="fa-solid ${tab.icon}"></i> ${tab.title}
+                </button>
+            `).join('');
+        }
+
+        // Render Assessment Questions
+        function renderAssessment() {
+            const container = document.getElementById('questions-container');
+            container.innerHTML = questions.map((q, index) => `
+                <div class="question-item relative" id="container-${q.id}">
+                    <label class="block text-slate-700 font-medium mb-2" for="${q.id}">
+                        ${index + 1}. ${q.text}
+                    </label>
+                    <div class="relative">
+                        <input type="text" id="${q.id}" autocomplete="off" 
+                            class="w-full px-4 py-3 rounded-lg border border-slate-300 focus:ring-2 focus:ring-brand-500 focus:border-brand-500 outline-none transition-colors"
+                            placeholder="Ketik jawaban singkat...">
+                        <div id="icon-${q.id}" class="absolute right-4 top-3 hidden text-xl"></div>
+                    </div>
+                    <p id="feedback-${q.id}" class="text-sm mt-1 hidden"></p>
+                </div>
+            `).join('');
+        }
+
+        // Switch Tabs Logic with Auto-Center
+        function switchTab(id) {
+            currentTabId = id;
+
+            // Update Content Visibility
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.remove('tab-active');
+                content.classList.add('tab-hidden');
+            });
+            document.getElementById(`tab-${id}`).classList.remove('tab-hidden');
+            document.getElementById(`tab-${id}`).classList.add('tab-active');
+
+            // Scroll main area to top
+            document.getElementById('main-scroll-area').scrollTop = 0;
+
+            // Update Chips Style
+            document.querySelectorAll('.chip-btn').forEach(chip => {
+                chip.classList.remove('bg-brand-600', 'text-white', 'border-brand-600', 'shadow-md');
+                chip.classList.add('bg-white', 'text-slate-600', 'border-slate-200');
+            });
+            
+            const activeChip = document.getElementById(`chip-${id}`);
+            activeChip.classList.remove('bg-white', 'text-slate-600', 'border-slate-200');
+            activeChip.classList.add('bg-brand-600', 'text-white', 'border-brand-600', 'shadow-md');
+
+            // Auto-Center the active chip in the scrollable container
+            const container = document.getElementById('chip-container');
+            const scrollLeft = activeChip.offsetLeft - (container.offsetWidth / 2) + (activeChip.offsetWidth / 2);
+            container.scrollTo({ left: scrollLeft, behavior: 'smooth' });
+
+            // Update Module Indicator
+            document.getElementById('module-indicator').innerText = `Modul ${id} / ${tabs.length}`;
+        }
+
+        // Fullscreen Logic
+        function toggleFullscreen() {
+            const icon = document.getElementById('fullscreen-icon');
+            if (!document.fullscreenElement) {
+                document.documentElement.requestFullscreen().catch(err => {
+                    alert(`Error attempting to enable fullscreen: ${err.message}`);
+                });
+                icon.classList.remove('fa-expand');
+                icon.classList.add('fa-compress');
+            } else {
+                document.exitFullscreen();
+                icon.classList.remove('fa-compress');
+                icon.classList.add('fa-expand');
+            }
+        }
+
+        // Assessment Check Logic
+        function checkAnswers() {
+            let score = 0;
+            const scorePerItem = 100 / questions.length;
+
+            questions.forEach(q => {
+                const inputEl = document.getElementById(q.id);
+                const containerEl = document.getElementById(`container-${q.id}`);
+                const iconEl = document.getElementById(`icon-${q.id}`);
+                const feedbackEl = document.getElementById(`feedback-${q.id}`);
+                
+                const userAnswer = inputEl.value.trim().toLowerCase();
+                
+                // Reset styles
+                inputEl.classList.remove('border-emerald-500', 'bg-emerald-50', 'border-rose-500', 'bg-rose-50', 'border-slate-300');
+                iconEl.classList.remove('hidden', 'text-emerald-500', 'fa-solid', 'fa-check', 'text-rose-500', 'fa-xmark');
+                feedbackEl.classList.remove('hidden', 'text-emerald-600', 'text-rose-600');
+
+                if (userAnswer === '') {
+                    inputEl.classList.add('border-slate-300');
+                    iconEl.classList.add('hidden');
+                    return; // skip validation if empty
+                }
+
+                // Check if user answer matches any of the accepted answers
+                const isCorrect = q.answers.some(ans => userAnswer.includes(ans) || userAnswer === ans);
+
+                iconEl.classList.remove('hidden');
+                feedbackEl.classList.remove('hidden');
+
+                if (isCorrect) {
+                    inputEl.classList.add('border-emerald-500', 'bg-emerald-50');
+                    iconEl.classList.add('text-emerald-500', 'fa-solid', 'fa-check');
+                    feedbackEl.classList.add('text-emerald-600');
+                    feedbackEl.innerText = "Benar!";
+                    score += scorePerItem;
+                } else {
+                    inputEl.classList.add('border-rose-500', 'bg-rose-50');
+                    iconEl.classList.add('text-rose-500', 'fa-solid', 'fa-xmark');
+                    feedbackEl.classList.add('text-rose-600');
+                    feedbackEl.innerHTML = `Kurang tepat. Kunci: <b>${q.answers[0]}</b>`;
+                }
+            });
+
+            // Display Score
+            const scoreDisplay = document.getElementById('score-display');
+            scoreDisplay.classList.remove('hidden');
+            scoreDisplay.innerHTML = `Skor: ${Math.round(score)} <span class="text-sm font-normal text-slate-500">/ 100</span>`;
+            
+            // Scroll slightly down to show score
+            scoreDisplay.scrollIntoView({ behavior: 'smooth', block: 'end' });
+        }
+
+        // Reset Assessment
+        function resetAssessment() {
+            document.getElementById('assessment-form').reset();
+            const scoreDisplay = document.getElementById('score-display');
+            scoreDisplay.classList.add('hidden');
+
+            questions.forEach(q => {
+                const inputEl = document.getElementById(q.id);
+                const iconEl = document.getElementById(`icon-${q.id}`);
+                const feedbackEl = document.getElementById(`feedback-${q.id}`);
+                
+                inputEl.classList.remove('border-emerald-500', 'bg-emerald-50', 'border-rose-500', 'bg-rose-50');
+                inputEl.classList.add('border-slate-300');
+                
+                iconEl.className = 'absolute right-4 top-3 hidden text-xl'; // reset completely
+                
+                feedbackEl.classList.add('hidden');
+                feedbackEl.innerText = '';
+            });
+            
+            // Scroll to top of assessment
+            document.getElementById('tab-6').scrollIntoView({ behavior: 'smooth' });
+        }
+    </script>
+</body>
+</html>
