@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MPI - Pencarian Data (Searching)</title>
+    <title>MPI - Pencarian Data (VLOOKUP & HLOOKUP)</title>
     
     <!-- Google Fonts: Inter -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -38,7 +38,6 @@
         }
     </script>
 
-    <!-- Custom CSS -->
     <style>
         /* Custom Scrollbar */
         ::-webkit-scrollbar {
@@ -137,7 +136,6 @@
 </head>
 <body class="bg-slate-50 h-screen flex flex-col font-sans overflow-hidden text-slate-800">
 
-    <!-- Header Area -->
     <header class="bg-white shadow-sm z-20 shrink-0">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex flex-wrap items-center justify-between gap-4">
             
@@ -150,7 +148,7 @@
                         <span class="text-xs font-bold px-2 py-1 bg-slate-100 text-slate-600 rounded-md">INFORMATIKA VIII</span>
                         <span class="text-xs font-bold px-2 py-1 bg-emerald-100 text-emerald-700 rounded-md">Bab 1 Sub A</span>
                     </div>
-                    <h1 class="text-lg md:text-xl font-bold leading-tight">Pencarian Data (Searching)</h1>
+                    <h1 class="text-lg md:text-xl font-bold leading-tight">Pencarian Data (Lookup)</h1>
                 </div>
             </div>
 
@@ -175,43 +173,42 @@
         </div>
     </header>
 
-    <!-- Main Content Area -->
     <main class="flex-1 overflow-y-auto main-content relative scroll-smooth" id="main-scroll-area">
         <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8 pb-24">
             
             <!-- TAB 1: Konsep Dasar -->
             <div id="tab-1" class="tab-content tab-active">
-                <div class="bg-gradient-to-r from-brand-600 to-indigo-800 rounded-2xl p-8 md:p-12 text-white shadow-lg mb-8 relative overflow-hidden">
+                <div class="bg-gradient-to-r from-emerald-600 to-teal-800 rounded-2xl p-8 md:p-12 text-white shadow-lg mb-8 relative overflow-hidden">
                     <div class="relative z-10">
-                        <h2 class="text-3xl md:text-4xl font-bold mb-4">Mengenal Konsep Pencarian</h2>
-                        <p class="text-brand-100 text-lg md:text-xl max-w-2xl leading-relaxed">
-                            Pencarian (Searching) adalah proses menemukan suatu nilai, data, atau informasi tertentu di dalam sekumpulan data yang ada. Dalam dunia komputasi, pencarian data yang efisien sangat penting agar informasi dapat ditemukan dengan cepat dan akurat.
+                        <h2 class="text-3xl md:text-4xl font-bold mb-4">Mengenal Fungsi Lookup</h2>
+                        <p class="text-emerald-100 text-lg md:text-xl max-w-2xl leading-relaxed">
+                            Dalam aplikasi pengolah angka (Spreadsheet) seperti Excel, pencarian data dilakukan menggunakan fungsi Lookup. Fungsi ini mengotomatiskan pencarian suatu nilai pada tabel referensi untuk mengambil data yang saling berelasi dengan sangat cepat.
                         </p>
                     </div>
-                    <i class="fa-solid fa-magnifying-glass-chart absolute right-[-5%] bottom-[-10%] text-9xl text-white opacity-10"></i>
+                    <i class="fa-solid fa-file-excel absolute right-[-5%] bottom-[-10%] text-9xl text-white opacity-10"></i>
                 </div>
 
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
                     <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-100">
                         <div class="w-12 h-12 bg-blue-100 text-blue-600 rounded-lg flex items-center justify-center text-xl mb-4">
-                            <i class="fa-solid fa-database"></i>
+                            <i class="fa-solid fa-key"></i>
                         </div>
-                        <h3 class="font-bold text-lg mb-2">Himpunan Data</h3>
-                        <p class="text-slate-600 text-sm">Pencarian selalu dilakukan pada sekumpulan data, bisa berupa daftar nama, angka, atau kumpulan file.</p>
+                        <h3 class="font-bold text-lg mb-2">Nilai Acuan (Lookup Value)</h3>
+                        <p class="text-slate-600 text-sm">Data kunci yang akan dicari. Ini bertindak sebagai kata kunci utama dan penghubung antara tabel referensi dengan tabel utama Anda.</p>
                     </div>
                     <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-100">
                         <div class="w-12 h-12 bg-emerald-100 text-emerald-600 rounded-lg flex items-center justify-center text-xl mb-4">
-                            <i class="fa-solid fa-check-circle"></i>
+                            <i class="fa-solid fa-table"></i>
                         </div>
-                        <h3 class="font-bold text-lg mb-2">Status: Found</h3>
-                        <p class="text-slate-600 text-sm">Status ini menandakan bahwa data atau informasi yang dicari berhasil ditemukan di dalam himpunan data.</p>
+                        <h3 class="font-bold text-lg mb-2">Tabel Referensi</h3>
+                        <p class="text-slate-600 text-sm">Kumpulan sel atau data sumber (database) tempat aplikasi akan mencari nilai acuan, lalu mengambil nilai yang terkait dengannya.</p>
                     </div>
                     <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-100">
                         <div class="w-12 h-12 bg-rose-100 text-rose-600 rounded-lg flex items-center justify-center text-xl mb-4">
-                            <i class="fa-solid fa-circle-xmark"></i>
+                            <i class="fa-solid fa-bullseye"></i>
                         </div>
-                        <h3 class="font-bold text-lg mb-2">Status: Not Found</h3>
-                        <p class="text-slate-600 text-sm">Status ini terjadi ketika sistem telah selesai mencari seluruh himpunan data, namun data tidak ada.</p>
+                        <h3 class="font-bold text-lg mb-2">Exact Match</h3>
+                        <p class="text-slate-600 text-sm">Mode pencarian mutlak, di mana aplikasi harus menemukan data yang sama persis (biasanya menggunakan parameter rentang FALSE atau 0).</p>
                     </div>
                 </div>
             </div>
@@ -220,13 +217,13 @@
             <div id="tab-2" class="tab-content tab-hidden">
                 <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
                     <div class="border-b border-slate-100 bg-slate-50 px-6 py-4 flex items-center gap-3">
-                        <i class="fa-solid fa-map-location-dot text-brand-600 text-xl"></i>
-                        <h2 class="text-xl font-bold">1. Lingkungan Pencarian Data</h2>
+                        <i class="fa-solid fa-magnifying-glass text-brand-600 text-xl"></i>
+                        <h2 class="text-xl font-bold">1. Lingkungan Pencarian Spreadsheet</h2>
                     </div>
                     <div class="p-6 md:p-8">
                         <h3 class="text-lg font-bold mb-3 text-slate-800">Ringkasan Materi</h3>
                         <p class="text-slate-600 leading-relaxed mb-6">
-                            Pencarian adalah aktivitas keseharian yang sering kita lakukan, baik di dunia nyata maupun di dunia digital. Komputer dapat melakukan pencarian jauh lebih cepat daripada manusia karena menggunakan algoritma tertentu. Keberhasilan suatu pencarian bergantung pada metode yang digunakan dan bagaimana data tersebut disusun sejak awal.
+                            Dalam dunia nyata, kita sering harus menyalin atau menggabungkan data dari satu tabel pendukung ke tabel utama. Misalnya, memasukkan "Nama Barang" secara otomatis setelah kita hanya mengetikkan "Kode Barang". Pada aplikasi lembar kerja (Excel / Google Sheets), hal ini dilakukan menggunakan fungsi khusus pencarian atau yang biasa disebut <strong>Lookup</strong>.
                         </p>
                         
                         <div class="bg-amber-50 border border-amber-200 rounded-xl p-5 relative overflow-hidden">
@@ -235,7 +232,7 @@
                                 <i class="fa-regular fa-lightbulb"></i> Contoh Kasus Realistis
                             </h4>
                             <p class="text-amber-900 text-sm md:text-base leading-relaxed">
-                                Skenario: Anda sedang mencari buku novel Harry Potter di perpustakaan sekolah. Jika buku-buku diletakkan sembarangan, Anda akan kesulitan. Namun, jika buku diletakkan rapi berdasarkan abjad atau genre, Anda dapat menemukannya dengan sangat cepat. Mesin pencari seperti Google menggunakan indeks (daftar rapi) miliaran halaman web agar bisa menampilkan hasil dalam hitungan detik.
+                                Skenario: Anda ditugaskan mereka-reka nilai siswa menggunakan sebuah tabel kosong yang baru berisi Nomor Induk Siswa (NIS). Di halaman lembar kerja lain, Anda memiliki tabel lengkap (referensi) berisi NIS dan Nama. Daripada mengetikkan nama satu per satu yang rawan *typo* (salah ketik) dan sangat memakan waktu, Anda bisa menggunakan rumus Lookup agar komputer mengisi seluruh nama siswa dalam hitungan detik.
                             </p>
                         </div>
                     </div>
@@ -246,23 +243,30 @@
             <div id="tab-3" class="tab-content tab-hidden">
                 <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
                     <div class="border-b border-slate-100 bg-slate-50 px-6 py-4 flex items-center gap-3">
-                        <i class="fa-solid fa-arrow-down-1-9 text-brand-600 text-xl"></i>
-                        <h2 class="text-xl font-bold">2. Pencarian Linier (Linear Search)</h2>
+                        <i class="fa-solid fa-arrows-up-down text-brand-600 text-xl"></i>
+                        <h2 class="text-xl font-bold">2. Pencarian Vertikal (VLOOKUP)</h2>
                     </div>
                     <div class="p-6 md:p-8">
                         <h3 class="text-lg font-bold mb-3 text-slate-800">Ringkasan Materi</h3>
                         <p class="text-slate-600 leading-relaxed mb-6">
-                            Pencarian Linier (Linear Search) adalah algoritma pencarian yang paling sederhana. Metode ini bekerja dengan cara memeriksa setiap elemen dalam sekumpulan data satu per satu, berurutan dari elemen pertama hingga elemen terakhir, sampai data yang dicari ditemukan atau seluruh data sudah diperiksa. Algoritma ini cocok untuk data yang tidak terurut, namun kurang efisien untuk jumlah data yang sangat banyak.
+                            <strong>VLOOKUP</strong> (Vertical Lookup) adalah rumus untuk mencari suatu nilai pada <strong>kolom paling kiri</strong> (pertama) dari sebuah tabel referensi. Apabila ditemukan, rumus ini akan bergerak ke kanan sejajar dengan baris nilai tersebut dan mengambil data dari urutan kolom yang kita inginkan. Rumus ini cocok jika tabel referensinya memanjang (menurun) dari atas ke bawah.<br><br>
+                            Sintaks rumusnya adalah:<br>
+                            <code class="block bg-slate-100 text-brand-700 p-3 rounded mt-2 font-mono text-sm border border-slate-200">
+                                =VLOOKUP(lookup_value, table_array, col_index_num, [range_lookup])
+                            </code>
                         </p>
                         
                         <div class="bg-sky-50 border border-sky-200 rounded-xl p-5 relative overflow-hidden">
                             <div class="absolute top-0 left-0 w-1 h-full bg-sky-500"></div>
                             <h4 class="font-bold text-sky-800 flex items-center gap-2 mb-2">
-                                <i class="fa-solid fa-user-group"></i> Contoh Kasus Realistis
+                                <i class="fa-solid fa-info-circle"></i> Penjelasan Argumen VLOOKUP
                             </h4>
-                            <p class="text-sky-900 text-sm md:text-base leading-relaxed">
-                                Skenario: Guru meminta Anda mencari nama "Budi" di lembar absensi pendaftaran eskul yang daftarnya belum diurutkan abjad. Anda harus membaca daftar nama dari baris paling atas, satu per satu ke bawah, sampai menemukan nama "Budi". Jika nama Budi ada di urutan terakhir, Anda harus membaca seluruh daftar. Ini adalah contoh penerapan Linear Search.
-                            </p>
+                            <ul class="list-disc list-inside text-sky-900 text-sm md:text-base leading-relaxed space-y-1">
+                                <li><strong>lookup_value:</strong> Sel / nilai yang mau dicari (misal: sel kode produk).</li>
+                                <li><strong>table_array:</strong> Area rentang tabel rujukan (blok data rujukan). Harus mencakup data acuan di kolom pertamanya.</li>
+                                <li><strong>col_index_num:</strong> Nomor urut kolom pada tabel rujukan yang datanya ingin diambil (misal: isi "2" untuk kolom kedua).</li>
+                                <li><strong>[range_lookup]:</strong> Isi <strong>FALSE</strong> atau <strong>0</strong> jika Anda ingin pencarian dilakukan secara *exact match* (sama persis).</li>
+                            </ul>
                         </div>
                     </div>
                 </div>
@@ -272,23 +276,28 @@
             <div id="tab-4" class="tab-content tab-hidden">
                 <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
                     <div class="border-b border-slate-100 bg-slate-50 px-6 py-4 flex items-center gap-3">
-                        <i class="fa-solid fa-arrows-split-up-and-left text-brand-600 text-xl"></i>
-                        <h2 class="text-xl font-bold">3. Pencarian Bagi Dua (Binary Search)</h2>
+                        <i class="fa-solid fa-arrows-left-right text-brand-600 text-xl"></i>
+                        <h2 class="text-xl font-bold">3. Pencarian Horizontal (HLOOKUP)</h2>
                     </div>
                     <div class="p-6 md:p-8">
                         <h3 class="text-lg font-bold mb-3 text-slate-800">Ringkasan Materi</h3>
                         <p class="text-slate-600 leading-relaxed mb-6">
-                            Pencarian Bagi Dua (Binary Search) adalah algoritma pencarian yang jauh lebih cepat dan efisien. Namun, syarat mutlak algoritma ini adalah <strong>data harus sudah terurut</strong>. Cara kerjanya adalah dengan membagi dua himpunan data, mengecek nilai tengah, dan membuang separuh bagian data yang tidak mungkin berisi nilai yang dicari. Proses ini diulang terus hingga data ditemukan.
+                            <strong>HLOOKUP</strong> (Horizontal Lookup) hampir persis sama dengan VLOOKUP, hanya arah bekerjanya saja yang berbeda. HLOOKUP mencari nilai acuan pada <strong>baris paling atas</strong> (pertama) dari tabel referensi. Jika ketemu, ia akan turun untuk mengambil data dari baris di bawahnya yang telah kita tentukan indeksnya. Ini cocok bila tabel referensinya memiliki judul di sisi kiri dan memanjang secara horizontal ke samping.<br><br>
+                            Sintaks rumusnya adalah:<br>
+                            <code class="block bg-slate-100 text-brand-700 p-3 rounded mt-2 font-mono text-sm border border-slate-200">
+                                =HLOOKUP(lookup_value, table_array, row_index_num, [range_lookup])
+                            </code>
                         </p>
                         
                         <div class="bg-emerald-50 border border-emerald-200 rounded-xl p-5 relative overflow-hidden">
                             <div class="absolute top-0 left-0 w-1 h-full bg-emerald-500"></div>
                             <h4 class="font-bold text-emerald-800 flex items-center gap-2 mb-2">
-                                <i class="fa-solid fa-book"></i> Contoh Kasus Realistis
+                                <i class="fa-solid fa-info-circle"></i> Perbedaan Parameter
                             </h4>
-                            <p class="text-emerald-900 text-sm md:text-base leading-relaxed">
-                                Skenario: Anda mencari arti kata "Komputer" di Kamus Bahasa Indonesia yang tebal (Kamus sudah terurut abjad). Anda tidak membacanya dari halaman pertama (A). Anda langsung membuka kamus di tengah-tengah. Jika huruf di tengah adalah 'M', Anda tahu 'K' ada di separuh awal kamus, maka bagian belakang kamus diabaikan. Anda lalu membagi dua lagi separuh awal tadi, begitu seterusnya sampai menemukan kata "Komputer".
-                            </p>
+                            <p class="text-emerald-900 text-sm md:text-base leading-relaxed mb-2">HLOOKUP menggunakan parameter baris sebagai patokan utama:</p>
+                            <ul class="list-disc list-inside text-emerald-900 text-sm md:text-base leading-relaxed space-y-1">
+                                <li><strong>row_index_num:</strong> Menentukan <strong>nomor urut baris</strong> yang datanya ingin ditampilkan (dihitung dari baris paling atas area blok tabel referensi sebagai baris pertama).</li>
+                            </ul>
                         </div>
                     </div>
                 </div>
@@ -307,12 +316,12 @@
                         <div class="flashcard-inner">
                             <div class="flashcard-front">
                                 <i class="fa-solid fa-circle-question text-3xl text-brand-500 mb-4"></i>
-                                <p class="font-semibold text-lg">Apa istilah bahasa inggris dari pencarian data dalam komputasi?</p>
+                                <p class="font-semibold text-lg">Rumus fungsi untuk mencari data yang arah pembacaan tabel referensinya menurun (vertikal)?</p>
                                 <span class="text-xs text-slate-400 absolute bottom-4">Klik untuk membalik</span>
                             </div>
                             <div class="flashcard-back">
                                 <i class="fa-solid fa-lightbulb text-3xl text-yellow-300 mb-4"></i>
-                                <p class="font-bold text-xl">Searching</p>
+                                <p class="font-bold text-xl">VLOOKUP</p>
                             </div>
                         </div>
                     </div>
@@ -322,12 +331,12 @@
                         <div class="flashcard-inner">
                             <div class="flashcard-front">
                                 <i class="fa-solid fa-circle-question text-3xl text-brand-500 mb-4"></i>
-                                <p class="font-semibold text-lg">Metode pencarian yang mengecek data satu per satu dari awal disebut?</p>
+                                <p class="font-semibold text-lg">Istilah/Argumen yang mewakili blok rentang sel tabel sumber tempat pencarian berpusat adalah?</p>
                                 <span class="text-xs text-slate-400 absolute bottom-4">Klik untuk membalik</span>
                             </div>
                             <div class="flashcard-back">
                                 <i class="fa-solid fa-lightbulb text-3xl text-yellow-300 mb-4"></i>
-                                <p class="font-bold text-xl">Linear Search<br><span class="text-sm font-normal">(Pencarian Linier)</span></p>
+                                <p class="font-bold text-xl">table_array</p>
                             </div>
                         </div>
                     </div>
@@ -337,12 +346,12 @@
                         <div class="flashcard-inner">
                             <div class="flashcard-front">
                                 <i class="fa-solid fa-circle-question text-3xl text-brand-500 mb-4"></i>
-                                <p class="font-semibold text-lg">Syarat mutlak agar algoritma Binary Search dapat digunakan adalah data harus?</p>
+                                <p class="font-semibold text-lg">Nilai untuk range_lookup agar hasil mencari data yang harus "sama persis" (exact match)?</p>
                                 <span class="text-xs text-slate-400 absolute bottom-4">Klik untuk membalik</span>
                             </div>
                             <div class="flashcard-back">
                                 <i class="fa-solid fa-lightbulb text-3xl text-yellow-300 mb-4"></i>
-                                <p class="font-bold text-xl">Sudah Terurut<br><span class="text-sm font-normal">(Sorted)</span></p>
+                                <p class="font-bold text-xl">FALSE <span class="text-sm font-normal">atau 0</span></p>
                             </div>
                         </div>
                     </div>
@@ -352,12 +361,12 @@
                         <div class="flashcard-inner">
                             <div class="flashcard-front">
                                 <i class="fa-solid fa-circle-question text-3xl text-brand-500 mb-4"></i>
-                                <p class="font-semibold text-lg">Metode apa yang paling cocok mencari nama di tumpukan kertas yang berantakan?</p>
+                                <p class="font-semibold text-lg">Pada fungsi VLOOKUP, di manakah data acuan (lookup_value) HARUS ditempatkan pada tabel referensi?</p>
                                 <span class="text-xs text-slate-400 absolute bottom-4">Klik untuk membalik</span>
                             </div>
                             <div class="flashcard-back">
                                 <i class="fa-solid fa-lightbulb text-3xl text-yellow-300 mb-4"></i>
-                                <p class="font-bold text-xl">Linear Search</p>
+                                <p class="font-bold text-xl">Kolom Pertama<br><span class="text-sm font-normal">(Paling Kiri)</span></p>
                             </div>
                         </div>
                     </div>
@@ -367,12 +376,12 @@
                         <div class="flashcard-inner">
                             <div class="flashcard-front">
                                 <i class="fa-solid fa-circle-question text-3xl text-brand-500 mb-4"></i>
-                                <p class="font-semibold text-lg">Status apa yang diberikan jika data yang dicari tidak ada dalam kumpulan data?</p>
+                                <p class="font-semibold text-lg">Apa kepanjangan dari huruf "H" pada rumus HLOOKUP?</p>
                                 <span class="text-xs text-slate-400 absolute bottom-4">Klik untuk membalik</span>
                             </div>
                             <div class="flashcard-back">
                                 <i class="fa-solid fa-lightbulb text-3xl text-yellow-300 mb-4"></i>
-                                <p class="font-bold text-xl">Not Found<br><span class="text-sm font-normal">(Tidak Ditemukan)</span></p>
+                                <p class="font-bold text-xl">Horizontal<br><span class="text-sm font-normal">(Mendatar)</span></p>
                             </div>
                         </div>
                     </div>
@@ -419,15 +428,15 @@
                     </div>
                     <h2 class="text-2xl md:text-3xl font-bold text-slate-800 mb-4">Kesimpulan & Refleksi</h2>
                     <p class="text-slate-600 max-w-2xl mx-auto leading-relaxed mb-8">
-                        Pencarian data (Searching) adalah fondasi penting dalam informatika. Anda telah mempelajari konsep dasar pencarian, serta dua algoritma utamanya: <strong>Linear Search</strong> yang sederhana untuk data acak, dan <strong>Binary Search</strong> yang sangat cepat namun membutuhkan data yang terurut. 
+                        Pencarian data pada aplikasi Spreadsheet sangat bergantung pada penggunaan fungsi Lookup. Anda kini telah mempelajari dua rumus paling vital dalam hal ini: <strong>VLOOKUP</strong> untuk rentang data referensi vertikal, serta <strong>HLOOKUP</strong> untuk tabel referensi berbentuk horizontal. 
                     </p>
                     <div class="inline-block bg-slate-50 border border-slate-200 rounded-xl p-6 text-left">
                         <h3 class="font-bold text-slate-700 mb-2">Cek Kemampuan Diri:</h3>
                         <ul class="space-y-2 text-slate-600 text-sm">
-                            <li><i class="fa-solid fa-check text-emerald-500 mr-2"></i> Saya mengerti apa itu proses Searching.</li>
-                            <li><i class="fa-solid fa-check text-emerald-500 mr-2"></i> Saya bisa menjelaskan cara kerja Linear Search.</li>
-                            <li><i class="fa-solid fa-check text-emerald-500 mr-2"></i> Saya bisa menjelaskan cara kerja Binary Search.</li>
-                            <li><i class="fa-solid fa-check text-emerald-500 mr-2"></i> Saya tahu syarat utama penggunaan Binary Search.</li>
+                            <li><i class="fa-solid fa-check text-emerald-500 mr-2"></i> Saya bisa mengidentifikasi perbedaan VLOOKUP dan HLOOKUP.</li>
+                            <li><i class="fa-solid fa-check text-emerald-500 mr-2"></i> Saya tahu fungsi argumen table_array.</li>
+                            <li><i class="fa-solid fa-check text-emerald-500 mr-2"></i> Saya memahami kapan harus menggunakan FALSE pada range_lookup.</li>
+                            <li><i class="fa-solid fa-check text-emerald-500 mr-2"></i> Saya tahu posisi sel nilai kunci di tabel referensi.</li>
                         </ul>
                     </div>
                 </div>
@@ -440,10 +449,10 @@
     <script>
         // Data Tabs
         const tabs = [
-            { id: 1, title: 'Konsep Dasar', icon: 'fa-cubes' },
-            { id: 2, title: 'Lingkungan', icon: 'fa-map-location-dot' },
-            { id: 3, title: 'Linear Search', icon: 'fa-arrow-down-1-9' },
-            { id: 4, title: 'Binary Search', icon: 'fa-arrows-split-up-and-left' },
+            { id: 1, title: 'Konsep Dasar', icon: 'fa-table' },
+            { id: 2, title: 'Lingkungan', icon: 'fa-magnifying-glass' },
+            { id: 3, title: 'VLOOKUP', icon: 'fa-arrows-up-down' },
+            { id: 4, title: 'HLOOKUP', icon: 'fa-arrows-left-right' },
             { id: 5, title: 'Flashcards', icon: 'fa-clone' },
             { id: 6, title: 'Asesmen', icon: 'fa-clipboard-check' },
             { id: 7, title: 'Kesimpulan', icon: 'fa-flag-checkered' }
@@ -451,18 +460,18 @@
 
         let currentTabId = 1;
 
-        // Data Asesmen
+        // Data Asesmen Khusus Lookup
         const questions = [
-            { id: 'q1', text: 'Proses menemukan nilai atau data tertentu di dalam sekumpulan data disebut...', answers: ['pencarian', 'searching'] },
-            { id: 'q2', text: 'Mencari data dengan menelusuri elemen satu per satu dari awal hingga akhir disebut pencarian...', answers: ['linier', 'linear', 'berurutan'] },
-            { id: 'q3', text: 'Metode pencarian yang membagi dua area pencarian secara terus-menerus disebut pencarian...', answers: ['biner', 'binary', 'bagi dua'] },
-            { id: 'q4', text: 'Syarat mutlak kumpulan data agar bisa dicari menggunakan Binary Search adalah data harus...', answers: ['terurut', 'diurutkan', 'urut'] },
-            { id: 'q5', text: 'Status yang menyatakan bahwa data yang dicari berhasil ditemukan adalah...', answers: ['found', 'ditemukan'] },
-            { id: 'q6', text: 'Status yang menyatakan bahwa data yang dicari tidak ada dalam himpunan data adalah...', answers: ['not found', 'tidak ditemukan'] },
-            { id: 'q7', text: 'Mencari arti kata dalam kamus cetak biasanya merepresentasikan algoritma pencarian...', answers: ['biner', 'binary'] },
-            { id: 'q8', text: 'Jika menelusuri absensi acak dari atas ke bawah, kita menggunakan algoritma pencarian...', answers: ['linier', 'linear'] },
-            { id: 'q9', text: 'Pencarian linier kurang efisien jika digunakan untuk mencari pada jumlah data yang sangat...', answers: ['banyak', 'besar'] },
-            { id: 'q10', text: 'Di mesin pencari, kata atau kalimat yang kita ketikkan untuk mencari informasi disebut kata...', answers: ['kunci', 'keyword'] }
+            { id: 'q1', text: 'Fungsi untuk mencari data dengan arah pembacaan tabel menurun (vertikal) disebut...', answers: ['vlookup'] },
+            { id: 'q2', text: 'Fungsi untuk mencari data dengan arah pembacaan tabel mendatar (horizontal) disebut...', answers: ['hlookup'] },
+            { id: 'q3', text: 'Nilai acuan / kata kunci pencarian (argumen pertama) dalam sintaks Lookup dinamakan...', answers: ['lookup_value', 'lookup value', 'nilai acuan'] },
+            { id: 'q4', text: 'Area rentang tabel referensi yang berisi basis data rujukan pencarian disebut dengan parameter...', answers: ['table_array', 'table array', 'tabel referensi'] },
+            { id: 'q5', text: 'Dalam rumus VLOOKUP, parameter argumen untuk menentukan urutan letak "kolom" yang datanya akan diambil disebut...', answers: ['col_index_num', 'col index num', 'indeks kolom', 'index kolom'] },
+            { id: 'q6', text: 'Dalam rumus HLOOKUP, parameter argumen untuk menentukan urutan "baris" yang datanya akan diambil disebut...', answers: ['row_index_num', 'row index num', 'indeks baris', 'index baris'] },
+            { id: 'q7', text: 'Penting! Ketik argumen [range_lookup] dengan nilai berupa apa agar Excel memastikan hasil harus cocok sama persis?', answers: ['false', '0', 'nol'] },
+            { id: 'q8', text: 'Pencarian dengan fungsi VLOOKUP dan HLOOKUP ini dikerjakan di perangkat lunak kategori pengolah angka, seperti Microsoft...', answers: ['excel', 'ms excel'] },
+            { id: 'q9', text: 'Syarat wajib VLOOKUP: Nilai acuan pada tabel referensi HARUS diletakkan tepat pada kolom ke-...', answers: ['1', 'satu', 'pertama', 'paling kiri'] },
+            { id: 'q10', text: 'Syarat wajib HLOOKUP: Nilai acuan pada tabel referensi HARUS diletakkan tepat pada baris ke-...', answers: ['1', 'satu', 'pertama', 'paling atas'] }
         ];
 
         // Initialize UI
